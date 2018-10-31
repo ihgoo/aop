@@ -6,7 +6,8 @@ import android.os.Looper;
 import android.os.Trace;
 import android.util.Log;
 
-import com.rhinstudio.aop.Constant;
+
+import com.rhinstudio.lib_aop.Constant;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -20,7 +21,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.util.concurrent.TimeUnit;
 
 @Aspect
-public class DebugLogAspect {
+public class DebugLogAspect extends CommonAspect{
 
     private static volatile boolean enabled = true;
 
@@ -62,7 +63,7 @@ public class DebugLogAspect {
         return result;
     }
 
-    private static void enterMethod(JoinPoint joinPoint) {
+    private void enterMethod(JoinPoint joinPoint) {
         if (!enabled) return;
 
         CodeSignature codeSignature = (CodeSignature) joinPoint.getSignature();
@@ -94,7 +95,7 @@ public class DebugLogAspect {
         }
     }
 
-    private static void exitMethod(JoinPoint joinPoint, Object result, long lengthMillis) {
+    private void exitMethod(JoinPoint joinPoint, Object result, long lengthMillis) {
         if (!enabled) return;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -121,8 +122,9 @@ public class DebugLogAspect {
         Log.d(asTag(), builder.toString());
     }
 
-    private static String asTag() {
+
+    @Override
+    public String asTag() {
         return Constant.LOG + ": " +Constant.DEBUG_LOG;
     }
-
 }

@@ -1,10 +1,10 @@
 package com.rhinstudio.lib_aop.internal;
 
-import android.nfc.Tag;
 import android.util.Log;
 
-import com.rhinstudio.aop.ClickUtil;
-import com.rhinstudio.aop.Constant;
+
+import com.rhinstudio.lib_aop.Constant;
+import com.rhinstudio.lib_aop.util.ClickUtil;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,7 +15,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.lang.reflect.Method;
 
 @Aspect
-public class ClickToFastAspect {
+public class ClickToFastAspect extends CommonAspect{
 
     @Around("execution(* android.view.View.OnClickListener.onClick(..)) && onClickToFast()" +
             "|| execution(* android.widget.AdapterView.OnItemClickListener.onItemClick(..)) && onClickToFast()")
@@ -28,14 +28,16 @@ public class ClickToFastAspect {
     }
 
     private void clickToFast(final ProceedingJoinPoint joinPoint) throws Throwable {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
         if (ClickUtil.isEnableStartActivity()) {
             joinPoint.proceed();
-            Log.d(Constant.LOG, "normal click!");
+            Log.d(asTag(), "normal click!");
         } else {
-            Log.d(Constant.LOG, "The clicks are too fast!");
+            Log.d(asTag(), "The clicks are too fast!");
         }
     }
 
+    @Override
+    public String asTag() {
+        return Constant.LOG + ": " +Constant.CLICK_TO_FAST;
+    }
 }
