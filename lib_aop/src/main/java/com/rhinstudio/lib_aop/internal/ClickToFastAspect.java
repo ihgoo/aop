@@ -10,9 +10,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
-
-import java.lang.reflect.Method;
 
 @Aspect
 public class ClickToFastAspect extends CommonAspect{
@@ -23,7 +20,7 @@ public class ClickToFastAspect extends CommonAspect{
         clickToFast(joinPoint);
     }
 
-    @Pointcut("@within(com.rhinstudio.aop.annotation.ClickToFast)||@annotation(com.rhinstudio.aop.annotation.ClickToFast)")
+    @Pointcut("@within(com.rhinstudio.lib_aop.annotation.ClickToFast)||@annotation(com.rhinstudio.lib_aop.annotation.ClickToFast)")
     public void onClickToFast() {
     }
 

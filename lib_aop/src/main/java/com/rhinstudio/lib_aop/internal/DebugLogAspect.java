@@ -25,7 +25,7 @@ public class DebugLogAspect extends CommonAspect{
 
     private static volatile boolean enabled = true;
 
-    @Pointcut("within(@com.rhinstudio.aop.annotation.DebugLog *)")
+    @Pointcut("within(@com.rhinstudio.lib_aop.annotation.DebugLog *)")
     public void withinAnnotatedClass() {
     }
 
@@ -37,11 +37,11 @@ public class DebugLogAspect extends CommonAspect{
     public void constructorInsideAnnotatedType() {
     }
 
-    @Pointcut("execution(@com.rhinstudio.aop.annotation.DebugLog * *(..)) || methodInsideAnnotatedType()")
+    @Pointcut("execution(@com.rhinstudio.lib_aop.annotation.DebugLog * *(..)) || methodInsideAnnotatedType()")
     public void method() {
     }
 
-    @Pointcut("execution(@com.rhinstudio.aop.annotation.DebugLog *.new(..)) || constructorInsideAnnotatedType()")
+    @Pointcut("execution(@com.rhinstudio.lib_aop.annotation.DebugLog *.new(..)) || constructorInsideAnnotatedType()")
     public void constructor() {
     }
 
