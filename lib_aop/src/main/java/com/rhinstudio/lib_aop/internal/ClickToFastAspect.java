@@ -35,6 +35,6 @@ public class ClickToFastAspect extends CommonAspect{
 
     @Override
     public String asTag() {
-        return Constant.LOG + ": " +Constant.CLICK_TO_FAST;
+        return Constant.LOG + ": " + Constant.CLICK_TO_FAST;
     }
 }
