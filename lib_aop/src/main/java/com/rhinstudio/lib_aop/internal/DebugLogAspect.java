@@ -7,6 +7,7 @@ import android.os.Trace;
 import android.util.Log;
 
 
+import com.rhinstudio.lib_aop.BuildConfig;
 import com.rhinstudio.lib_aop.Constant;
 
 import org.aspectj.lang.JoinPoint;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 public class DebugLogAspect extends CommonAspect{
 
-    private static volatile boolean enabled = true;
+    private static volatile boolean enabled = BuildConfig.DEBUG;
 
     @Pointcut("within(@com.rhinstudio.lib_aop.annotation.DebugLog *)")
     public void withinAnnotatedClass() {
@@ -68,12 +69,13 @@ public class DebugLogAspect extends CommonAspect{
 
         CodeSignature codeSignature = (CodeSignature) joinPoint.getSignature();
 
+        Class<?> cls = codeSignature.getDeclaringType();
         String methodName = codeSignature.getName();
         String[] parameterNames = codeSignature.getParameterNames();
         Object[] parameterValues = joinPoint.getArgs();
 
         StringBuilder builder = new StringBuilder("\u21E2 ");
-        builder.append(methodName).append('(');
+        builder.append(getClassName(cls) + ": ").append(methodName).append('(');
         for (int i = 0; i < parameterValues.length; i++) {
             if (i > 0) {
                 builder.append(", ");
@@ -104,11 +106,14 @@ public class DebugLogAspect extends CommonAspect{
 
         Signature signature = joinPoint.getSignature();
 
+
+        Class<?> cls = signature.getDeclaringType();
         String methodName = signature.getName();
         boolean hasReturnType = signature instanceof MethodSignature
                 && ((MethodSignature) signature).getReturnType() != void.class;
 
         StringBuilder builder = new StringBuilder("\u21E0 ")
+                .append(getClassName(cls) + ": ")
                 .append(methodName)
                 .append(" [")
                 .append(lengthMillis)
@@ -119,12 +124,19 @@ public class DebugLogAspect extends CommonAspect{
             builder.append(Strings.toString(result));
         }
 
-        Log.d(asTag(), builder.toString());
+        Log.v(asTag(), builder.toString());
+    }
+
+    private String getClassName(Class<?> cls){
+        if (cls.isAnonymousClass()) {
+            return getClassName(cls.getEnclosingClass());
+        }
+        return cls.getSimpleName();
     }
 
 
     @Override
     public String asTag() {
-        return Constant.LOG + ": " +Constant.DEBUG_LOG;
+        return Constant.LOG + ": " + Constant.DEBUG_LOG;
     }
 }
